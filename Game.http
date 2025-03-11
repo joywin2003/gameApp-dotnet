@@ -1,1 +1,15 @@
-GET http://localhost:5048/games
+GET http://localhost:5048/
+
+###
+GET http://localhost:5048/games/2
+
+###
+POST http://localhost:5048/games
+Content-Type: application/json
+
+{
+    "Name": "Among Us", 
+    "Genre": "Party", 
+    "Price": 4.99, 
+    "ReleaseDate": "2018-11-16"
+}
