@@ -1,7 +1,7 @@
 GET http://localhost:5048/
 
 ###
-GET http://localhost:5048/games/2
+GET http://localhost:5048/games/4
 
 ###
 POST http://localhost:5048/games
@@ -9,6 +9,17 @@ Content-Type: application/json
 
 {
     "Name": "Among Us", 
+    "Genre": "Party", 
+    "Price": 4.99, 
+    "ReleaseDate": "2018-11-16"
+}
+
+###
+PUT http://localhost:5048/games/4
+Content-Type: application/json
+
+{
+    "Name": "haha Among Us", 
     "Genre": "Party", 
     "Price": 4.99, 
     "ReleaseDate": "2018-11-16"
