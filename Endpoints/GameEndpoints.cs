@@ -1,4 +1,3 @@
-using System;
 using GameStore.dtos;
 
 namespace GameStore.Endpoints;
@@ -20,19 +19,19 @@ public static class GameEndpoints
         new GameDto(10, "Among Us", "Party", 4.99m, new DateOnly(2018, 11, 16))
     ];
 
-    public static WebApplication MapGamesEndpoints(this WebApplication app)
+    public static RouteGroupBuilder MapGamesEndpoints(this WebApplication app)
     {
-        app.MapGet("/", () => "Hello World!");
+        var group = app.MapGroup("games").WithParameterValidation();
 
-        app.MapGet("games", () => gameDtos);
+        group.MapGet("/", () => gameDtos);
 
-        app.MapGet("games/{id}", (int id) =>
+        group.MapGet("/{id}", (int id) =>
         {
             GameDto? game = gameDtos.Find(game => game.Id == id);
             return game == null ? Results.NotFound() : Results.Ok(game);
         }).WithName(GetGameEndpointName);
 
-        app.MapPost("games", (CreateGameDto newGame) =>
+        group.MapPost("/", (CreateGameDto newGame) =>
         {
             GameDto game = new(
                 Id: gameDtos.Count + 1,
@@ -45,7 +44,7 @@ public static class GameEndpoints
             return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, game);
         });
 
-        app.MapPut("games/{id}", (int id, UpdateGameDto updateGame) =>
+        group.MapPut("/{id}", (int id, UpdateGameDto updateGame) =>
         {
             var index = gameDtos.FindIndex(game => game.Id == id);
 
@@ -63,11 +62,11 @@ public static class GameEndpoints
             return Results.Ok($"{id},{index}");
         });
 
-        app.MapDelete("games/{id}", (int id) =>
+        group.MapDelete("/{id}", (int id) =>
         {
             gameDtos.RemoveAll((game) => game.Id == id);
             return Results.NoContent();
         });
-        return app;
+        return group;
     }
 }
