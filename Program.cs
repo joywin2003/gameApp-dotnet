@@ -21,7 +21,11 @@ app.MapGet("/", () => "Hello World!");
 
 app.MapGet("games", () => gameDtos);
 
-app.MapGet("games/{id}", (int id) => gameDtos.Find(game => game.Id == id)).WithName(GetGameEndpointName);
+app.MapGet("games/{id}", (int id) =>
+{
+      GameDto? game = gameDtos.Find(game => game.Id == id);
+      return game == null ? Results.NotFound() : Results.Ok(game);
+}).WithName(GetGameEndpointName);
 
 app.MapPost("games", (CreateGameDto newGame) =>
 {
@@ -36,7 +40,8 @@ app.MapPost("games", (CreateGameDto newGame) =>
       return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, game);
 });
 
-app.MapPut("games/{id}",(int id, UpdateGameDto updateGame)=>{
+app.MapPut("games/{id}", (int id, UpdateGameDto updateGame) =>
+{
       var index = gameDtos.FindIndex(game => game.Id == id);
       gameDtos[index] = new GameDto(
             id,
@@ -46,6 +51,12 @@ app.MapPut("games/{id}",(int id, UpdateGameDto updateGame)=>{
             updateGame.ReleaseDate
       );
       return Results.Ok($"{id},{index}");
+});
+
+app.MapDelete("games/{id}", (int id) =>
+{
+      gameDtos.RemoveAll((game) => game.Id == id);
+      return Results.NoContent();
 });
 
 app.Run();

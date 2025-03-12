@@ -1,7 +1,7 @@
 GET http://localhost:5048/
 
 ###
-GET http://localhost:5048/games/4
+GET http://localhost:5048/games/23
 
 ###
 POST http://localhost:5048/games
@@ -24,3 +24,7 @@ Content-Type: application/json
     "Price": 4.99, 
     "ReleaseDate": "2018-11-16"
 }
+
+###
+DELETE http://localhost:5048/games/2
+
