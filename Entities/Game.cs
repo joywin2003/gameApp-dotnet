@@ -2,7 +2,7 @@ using System;
 
 namespace GameStore.Entities;
 
-public class Games
+public class Game
 {
     public int Id { get; set; }
     public required string Name { get; set; }
