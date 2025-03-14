@@ -44,22 +44,19 @@ public static class GameEndpoints
             return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, game.ToDetailsDto());
         });
 
-        group.MapPut("/{id}", (int id, UpdateGameDto updateGame) =>
+        group.MapPut("/{id}", (int id, UpdateGameDto updateGame, GameStoreContext dbContext) =>
         {
-            var index = gameDtos.FindIndex(game => game.Id == id);
+            Game? existingGame = dbContext.Games.Find(id);
 
-            if (index == -1)
+            if (existingGame is null)
             {
                 return Results.NotFound();
             }
-            gameDtos[index] = new GameSummaryDto(
-                id,
-                updateGame.Name,
-                updateGame.Genre,
-                updateGame.Price,
-                updateGame.ReleaseDate
-            );
-            return Results.Ok($"{id},{index}");
+            dbContext.Entry(existingGame)
+            .CurrentValues
+            .SetValues(updateGame.ToEntity(id));
+            dbContext.SaveChanges();
+            return Results.NoContent();
         });
 
         group.MapDelete("/{id}", (int id) =>
