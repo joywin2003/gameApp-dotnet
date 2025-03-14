@@ -8,7 +8,8 @@ POST http://localhost:5048/games
 Content-Type: application/json
 
 {
-    "Genre": "Party", 
+    "Name": "haha Among Us", 
+    "genreId": 5, 
     "Price": 4.99, 
     "ReleaseDate": "2018-11-16"
 }
