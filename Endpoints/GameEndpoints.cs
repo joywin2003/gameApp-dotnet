@@ -44,7 +44,15 @@ public static class GameEndpoints
             };
             dbContext.Games.Add(game);
             dbContext.SaveChanges();
-            return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, game);
+
+            GameDto gameDto = new(
+                game.Id,
+                game.Name,
+                game.Genre!.Name,
+                game.Price,
+                game.ReleaseDate
+            );
+            return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, gameDto);
         });
 
         group.MapPut("/{id}", (int id, UpdateGameDto updateGame) =>
